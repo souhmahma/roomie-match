@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — RoomieMatch{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-8">Hello, {{ user.username }} 👋</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  {% if user.is_seeker %}
+    <a href="{% url 'listings:list' %}" class="bg-white rounded-xl shadow p-6 hover:shadow-md transition">
+      <p class="text-3xl mb-2">🔍</p>
+      <p class="font-semibold">Browse listings</p>
+      <p class="text-gray-500 text-sm mt-1">Find compatible roommates</p>
+    </a>
+    <a href="{% url 'visits:my_visits' %}" class="bg-white rounded-xl shadow p-6 hover:shadow-md transition">
+      <p class="text-3xl mb-2">📅</p>
+      <p class="font-semibold">My visit requests</p>
+      <p class="text-gray-500 text-sm mt-1">Track my requests</p>
+    </a>
+    <a href="{% url 'messaging:inbox' %}" class="bg-white rounded-xl shadow p-6 hover:shadow-md transition">
+      <p class="text-3xl mb-2">💬</p>
+      <p class="font-semibold">Messages</p>
+      <p class="text-gray-500 text-sm mt-1">View my conversations</p>
+    </a>
+  {% else %}
+    <a href="{% url 'listings:create' %}" class="bg-white rounded-xl shadow p-6 hover:shadow-md transition">
+      <p class="text-3xl mb-2">➕</p>
+      <p class="font-semibold">Post a listing</p>
+      <p class="text-gray-500 text-sm mt-1">Add a room</p>
+    </a>
+    <a href="{% url 'listings:my_listings' %}" class="bg-white rounded-xl shadow p-6 hover:shadow-md transition">
+      <p class="text-3xl mb-2">🏠</p>
+      <p class="font-semibold">My listings</p>
+      <p class="text-gray-500 text-sm mt-1">Manage my listings</p>
+    </a>
+    <a href="{% url 'visits:manage' %}" class="bg-white rounded-xl shadow p-6 hover:shadow-md transition">
+      <p class="text-3xl mb-2">📅</p>
+      <p class="font-semibold">Visit requests</p>
+      <p class="text-gray-500 text-sm mt-1">Accept or decline</p>
+    </a>
+  {% endif %}
+
+  <a href="{% url 'profile' %}" class="bg-white rounded-xl shadow p-6 hover:shadow-md transition">
+    <p class="text-3xl mb-2">👤</p>
+    <p class="font-semibold">My profile</p>
+    <p class="text-gray-500 text-sm mt-1">Edit my information</p>
+  </a>
+</div>
+{% endblock %}
