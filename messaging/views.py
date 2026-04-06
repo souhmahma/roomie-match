@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from .models import Conversation, Message
+from visits.tasks import send_new_message_email
 
 User = get_user_model()
 
@@ -39,10 +40,10 @@ def conversation_detail(request, pk):
                 sender       = request.user,
                 content      = content,
             )
-            # Update conversation timestamp
             conversation.save()
+            send_new_message_email.delay(message.id)
 
-            # If HTMX request → return only the new message
+            # If htmx req return only the new message
             if request.htmx:
                 return render(request, 'messaging/partials/message.html', {
                     'message': message,
@@ -63,7 +64,6 @@ def start_conversation(request, user_pk):
     other_user = get_object_or_404(User, pk=user_pk)
     listing_pk = request.GET.get('listing')
 
-    # Check if conversation already exists
     existing = Conversation.objects.filter(
         participants = request.user
     ).filter(
@@ -73,7 +73,6 @@ def start_conversation(request, user_pk):
     if existing:
         return redirect('messaging:conversation', pk=existing.pk)
 
-    # Create new conversation
     conversation = Conversation.objects.create()
     conversation.participants.add(request.user, other_user)
 

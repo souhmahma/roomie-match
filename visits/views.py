@@ -4,6 +4,11 @@ from django.contrib import messages
 from .models import VisitRequest, Availability
 from .forms import VisitRequestForm, AvailabilityForm
 from listings.models import Listing
+from visits.tasks import (
+    send_visit_request_email,
+    send_visit_accepted_email,
+    send_visit_declined_email
+)
 
 @login_required
 def request_visit(request, listing_pk):
@@ -32,6 +37,7 @@ def request_visit(request, listing_pk):
             visit.seeker  = request.user
             visit.listing = listing
             visit.save()
+            send_visit_request_email.delay(visit.id)
             messages.success(request, 'Visit request sent successfully!')
             return redirect('visits:my_visits')
     else:
@@ -86,10 +92,11 @@ def update_visit_status(request, pk, action):
     if action == 'accept':
         visit.status = VisitRequest.Status.ACCEPTED
         messages.success(request, f'Visit request from {visit.seeker.username} accepted.')
+        send_visit_accepted_email.delay(visit.id)
     elif action == 'decline':
         visit.status = VisitRequest.Status.DECLINED
         messages.info(request, f'Visit request from {visit.seeker.username} declined.')
-
+        send_visit_declined_email.delay(visit.id)
     visit.save()
 
     if request.htmx:

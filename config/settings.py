@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'matching',
     'messaging',
     'visits',
+    'django_celery_results',
 
 
 
@@ -75,3 +76,20 @@ DATABASES = {
         config('DATABASE_URL', default=f"sqlite:///{BASE_DIR}/db.sqlite3")
     )
 }
+
+# Celery
+CELERY_BROKER_URL        = config('REDIS_URL')
+CELERY_RESULT_BACKEND    = config('REDIS_URL')
+CELERY_ACCEPT_CONTENT    = ['json']
+CELERY_TASK_SERIALIZER   = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Email
+EMAIL_BACKEND       = config('EMAIL_BACKEND')
+EMAIL_HOST          = config('EMAIL_HOST')
+EMAIL_PORT          = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS       = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_HOST_USER     = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL  = config('DEFAULT_FROM_EMAIL')
+

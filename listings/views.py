@@ -71,6 +71,7 @@ def listing_create(request):
             listing.save()
             formset.instance = listing
             formset.save()
+            send_listing_created_email.delay(listing.id)
             messages.success(request, 'Listing posted successfully!')
             return redirect('listings:detail', pk=listing.pk)
     else:
