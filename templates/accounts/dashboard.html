@@ -2,12 +2,14 @@
 {% block title %}Dashboard — RoomieMatch{% endblock %}
 
 {% block content %}
-<h1 class="text-3xl font-bold mb-2">Hello, {{ user.username }} 👋</h1>
-<p class="text-gray-500 mb-8">{{ user.get_role_display }} — {{ user.city }}</p>
+<div class="mb-8">
+  <h1 class="text-3xl font-bold">Hello, {{ user.username }} 👋</h1>
+  <p class="text-gray-500 mt-1">{{ user.get_role_display }} — {{ user.city }}</p>
+</div>
 
 {% if user.is_seeker %}
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
     <a href="{% url 'matching:best_matches' %}"
        class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-blue-500">
@@ -23,6 +25,13 @@
       <p class="text-gray-500 text-sm mt-1">Search all available rooms</p>
     </a>
 
+    <a href="{% url 'messaging:inbox' %}"
+       class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-yellow-500">
+      <p class="text-3xl mb-2">💬</p>
+      <p class="font-semibold">Messages</p>
+      <p class="text-gray-500 text-sm mt-1">View my conversations</p>
+    </a>
+
     <a href="{% url 'profile' %}"
        class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-purple-500">
       <p class="text-3xl mb-2">👤</p>
@@ -34,7 +43,7 @@
 
 {% else %}
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
     <a href="{% url 'listings:create' %}"
        class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-blue-500">
@@ -48,6 +57,13 @@
       <p class="text-3xl mb-2">🏠</p>
       <p class="font-semibold">My listings</p>
       <p class="text-gray-500 text-sm mt-1">Manage my rooms</p>
+    </a>
+
+    <a href="{% url 'messaging:inbox' %}"
+       class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-yellow-500">
+      <p class="text-3xl mb-2">💬</p>
+      <p class="font-semibold">Messages</p>
+      <p class="text-gray-500 text-sm mt-1">View my conversations</p>
     </a>
 
     <a href="{% url 'profile' %}"

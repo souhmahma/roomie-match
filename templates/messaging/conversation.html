@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}{{ other_user.username }} — RoomieMatch{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+  <!-- Header -->
+  <div class="bg-white rounded-xl shadow p-4 mb-4 flex items-center gap-4">
+    <a href="{% url 'messaging:inbox' %}" class="text-gray-400 hover:text-gray-600">←</a>
+    {% if other_user.avatar %}
+      <img src="{{ other_user.avatar.url }}" class="w-10 h-10 rounded-full object-cover" />
+    {% else %}
+      <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-sm">
+        {{ other_user.username|first|upper }}
+      </div>
+    {% endif %}
+    <div>
+      <p class="font-semibold">{{ other_user.username }}</p>
+      {% if conversation.listing %}
+        <p class="text-blue-600 text-xs">Re: {{ conversation.listing.title }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div id="messages-container"
+       class="bg-white rounded-xl shadow p-4 mb-4 space-y-3 overflow-y-auto"
+       style="min-height: 400px; max-height: 500px;"
+       hx-get="{% url 'messaging:conversation' conversation.pk %}"
+       hx-trigger="every 5s"
+       hx-swap="none">
+
+    {% for message in messages %}
+      {% include 'messaging/partials/message.html' %}
+    {% endfor %}
+
+  </div>
+
+  <!-- Input -->
+  <form method="POST"
+        hx-post="{% url 'messaging:conversation' conversation.pk %}"
+        hx-target="#messages-container"
+        hx-swap="beforeend"
+        hx-on::after-request="this.reset(); document.getElementById('messages-container').scrollTop = document.getElementById('messages-container').scrollHeight"
+        class="bg-white rounded-xl shadow p-4 flex gap-3">
+    {% csrf_token %}
+    <input
+      type="text"
+      name="content"
+      placeholder="Write a message..."
+      autocomplete="off"
+      required
+      class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <button type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+      Send
+    </button>
+  </form>
+</div>
+
+<script>
+  // Scroll to bottom on load
+  const container = document.getElementById('messages-container')
+  container.scrollTop = container.scrollHeight
+</script>
+{% endblock %}

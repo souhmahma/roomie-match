@@ -15,24 +15,40 @@
 
     <div class="flex items-center gap-4 text-sm">
 
-      <!-- Public -->
-      <a href="{% url 'listings:list' %}" class="text-gray-600 hover:text-blue-600">Listings</a>
+      <a href="{% url 'listings:list' %}" class="text-gray-600 hover:text-blue-600">
+        Listings
+      </a>
 
       {% if user.is_authenticated %}
 
-        <!-- Seeker only -->
         {% if user.is_seeker %}
-          <a href="{% url 'matching:best_matches' %}" class="text-gray-600 hover:text-blue-600">🎯 My matches</a>
+          <a href="{% url 'matching:best_matches' %}" class="text-gray-600 hover:text-blue-600">
+            🎯 My matches
+          </a>
         {% endif %}
 
-        <!-- Owner only -->
         {% if user.is_owner %}
-          <a href="{% url 'listings:my_listings' %}" class="text-gray-600 hover:text-blue-600">My listings</a>
+          <a href="{% url 'listings:my_listings' %}" class="text-gray-600 hover:text-blue-600">
+            My listings
+          </a>
         {% endif %}
 
-        <a href="{% url 'dashboard' %}" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+        <!-- Messages with unread badge -->
+        <a href="{% url 'messaging:inbox' %}" class="relative text-gray-600 hover:text-blue-600 flex items-center gap-1">
+          💬 Messages
+          <span id="unread-count"
+                hx-get="{% url 'messaging:unread_count' %}"
+                hx-trigger="load, every 30s"
+                hx-swap="innerHTML"
+                class="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] text-center">
+          </span>
+        </a>
 
-        <!-- Avatar + profile -->
+        <a href="{% url 'dashboard' %}" class="text-gray-600 hover:text-blue-600">
+          Dashboard
+        </a>
+
+        <!-- Avatar + username -->
         <a href="{% url 'profile' %}" class="flex items-center gap-2 hover:opacity-80">
           {% if user.avatar %}
             <img src="{{ user.avatar.url }}" class="w-8 h-8 rounded-full object-cover" />

@@ -17,6 +17,8 @@ INSTALLED_APPS = [
     'accounts',
     'listings',
     'matching',
+    'messaging',
+
 
     
 ]
