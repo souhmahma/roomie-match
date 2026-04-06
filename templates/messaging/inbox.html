@@ -5,13 +5,11 @@
 <h1 class="text-3xl font-bold mb-8">Messages</h1>
 
 <div class="space-y-3">
-  {% for conversation in conversations %}
-    {% with other=conversation.get_other_user|call:user last=conversation.last_message %}
+{% for conversation in conversations %}
     <a href="{% url 'messaging:conversation' conversation.pk %}"
        class="bg-white rounded-xl shadow p-4 flex items-center gap-4 hover:shadow-md transition block">
 
-      <!-- Avatar -->
-      {% with other_user=conversation.get_other_user %}
+      {% with other_user=conversation.other_user %}
         {% if other_user.avatar %}
           <img src="{{ other_user.avatar.url }}" class="w-12 h-12 rounded-full object-cover" />
         {% else %}
@@ -27,9 +25,11 @@
               <p class="text-gray-400 text-xs">{{ conversation.last_message.created_at|timesince }} ago</p>
             {% endif %}
           </div>
+          
           {% if conversation.listing %}
             <p class="text-blue-600 text-xs">Re: {{ conversation.listing.title }}</p>
           {% endif %}
+          
           {% if conversation.last_message %}
             <p class="text-gray-500 text-sm truncate">{{ conversation.last_message.content }}</p>
           {% else %}
@@ -37,16 +37,7 @@
           {% endif %}
         </div>
       {% endwith %}
-
     </a>
-    {% endwith %}
-  {% empty %}
-    <div class="text-center text-gray-500 py-20">
-      <p class="text-xl mb-2">No conversations yet</p>
-      <a href="{% url 'listings:list' %}" class="text-blue-600 hover:underline">
-        Browse listings to start a conversation
-      </a>
-    </div>
-  {% endfor %}
+{% endfor %}
 </div>
 {% endblock %}

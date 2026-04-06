@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'listings',
     'matching',
     'messaging',
+    'visits',
+
 
 
     

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Manage visits — RoomieMatch{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-8">Visit requests</h1>
+
+<div class="space-y-4" id="visits-list">
+  {% for visit in visits %}
+    {% include 'visits/partials/visit_card.html' %}
+  {% empty %}
+    <div class="text-center text-gray-500 py-20">No visit requests yet.</div>
+  {% endfor %}
+</div>
+{% endblock %}

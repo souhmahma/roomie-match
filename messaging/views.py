@@ -12,10 +12,13 @@ def inbox(request):
     conversations = request.user.conversations.prefetch_related(
         'participants', 'messages', 'listing'
     )
+    
+    for conversation in conversations:
+        conversation.other_user = conversation.get_other_user(request.user)
+        
     return render(request, 'messaging/inbox.html', {
         'conversations': conversations,
     })
-
 @login_required
 def conversation_detail(request, pk):
     """View a conversation and send messages"""

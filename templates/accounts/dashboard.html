@@ -31,6 +31,12 @@
       <p class="font-semibold">Messages</p>
       <p class="text-gray-500 text-sm mt-1">View my conversations</p>
     </a>
+      <a href="{% url 'visits:my_visits' %}"
+        class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-orange-500">
+        <p class="text-3xl mb-2">📅</p>
+        <p class="font-semibold">My visits</p>
+        <p class="text-gray-500 text-sm mt-1">Track my visit requests</p>
+      </a>
 
     <a href="{% url 'profile' %}"
        class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-purple-500">
@@ -65,7 +71,12 @@
       <p class="font-semibold">Messages</p>
       <p class="text-gray-500 text-sm mt-1">View my conversations</p>
     </a>
-
+      <a href="{% url 'visits:manage' %}"
+        class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-orange-500">
+        <p class="text-3xl mb-2">📅</p>
+        <p class="font-semibold">Visit requests</p>
+        <p class="text-gray-500 text-sm mt-1">Accept or decline</p>
+      </a>
     <a href="{% url 'profile' %}"
        class="bg-white rounded-xl shadow p-6 hover:shadow-md transition border-l-4 border-purple-500">
       <p class="text-3xl mb-2">👤</p>

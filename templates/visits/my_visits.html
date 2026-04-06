@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}My visit requests — RoomieMatch{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-8">My visit requests</h1>
+
+<div class="space-y-4">
+  {% for visit in visits %}
+    <div class="bg-white rounded-xl shadow p-6">
+      <div class="flex justify-between items-start">
+        <div>
+          <h3 class="font-semibold text-lg">{{ visit.listing.title }}</h3>
+          <p class="text-gray-500 text-sm">📍 {{ visit.listing.city }}</p>
+          <p class="text-gray-500 text-sm mt-1">
+            📅 {{ visit.date }} at {{ visit.time }}
+          </p>
+          {% if visit.message %}
+            <p class="text-gray-400 text-sm mt-1 italic">"{{ visit.message }}"</p>
+          {% endif %}
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          <span class="px-3 py-1 rounded-full text-sm font-medium
+            {% if visit.status == 'accepted' %}bg-green-100 text-green-700
+            {% elif visit.status == 'declined' %}bg-red-100 text-red-700
+            {% elif visit.status == 'cancelled' %}bg-gray-100 text-gray-500
+            {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+            {{ visit.get_status_display }}
+          </span>
+          {% if visit.status == 'pending' %}
+            <a href="{% url 'visits:cancel' visit.pk %}"
+               class="text-red-500 text-sm hover:underline"
+               onclick="return confirm('Cancel this request?')">
+              Cancel
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="text-center text-gray-500 py-20">
+      <p class="text-xl mb-2">No visit requests yet</p>
+      <a href="{% url 'listings:list' %}" class="text-blue-600 hover:underline">
+        Browse listings
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

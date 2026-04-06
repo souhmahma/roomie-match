@@ -1,0 +1,58 @@
+<div class="bg-white rounded-xl shadow p-6" id="visit-{{ visit.pk }}">
+  <div class="flex justify-between items-start">
+    <div>
+      <div class="flex items-center gap-3 mb-2">
+        {% if visit.seeker.avatar %}
+          <img src="{{ visit.seeker.avatar.url }}" class="w-10 h-10 rounded-full object-cover" />
+        {% else %}
+          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-sm">
+            {{ visit.seeker.username|first|upper }}
+          </div>
+        {% endif %}
+        <div>
+          <p class="font-semibold">{{ visit.seeker.username }}</p>
+          <p class="text-gray-500 text-xs">{{ visit.seeker.city }}</p>
+        </div>
+      </div>
+      <p class="text-gray-600 text-sm">📋 {{ visit.listing.title }}</p>
+      <p class="text-gray-500 text-sm">📅 {{ visit.date }} at {{ visit.time }}</p>
+      {% if visit.message %}
+        <p class="text-gray-400 text-sm mt-2 italic">"{{ visit.message }}"</p>
+      {% endif %}
+    </div>
+
+    <div class="flex flex-col items-end gap-2">
+      <span class="px-3 py-1 rounded-full text-sm font-medium
+        {% if visit.status == 'accepted' %}bg-green-100 text-green-700
+        {% elif visit.status == 'declined' %}bg-red-100 text-red-700
+        {% elif visit.status == 'cancelled' %}bg-gray-100 text-gray-500
+        {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+        {{ visit.get_status_display }}
+      </span>
+
+      {% if visit.status == 'pending' %}
+        <div class="flex gap-2">
+          <button
+            hx-post="{% url 'visits:update_status' visit.pk 'accept' %}"
+            hx-target="#visit-{{ visit.pk }}"
+            hx-swap="outerHTML"
+            class="bg-green-500 text-white px-4 py-1.5 rounded-lg hover:bg-green-600 text-sm">
+            ✅ Accept
+          </button>
+          <button
+            hx-post="{% url 'visits:update_status' visit.pk 'decline' %}"
+            hx-target="#visit-{{ visit.pk }}"
+            hx-swap="outerHTML"
+            class="bg-red-500 text-white px-4 py-1.5 rounded-lg hover:bg-red-600 text-sm">
+            ❌ Decline
+          </button>
+        </div>
+      {% endif %}
+
+      <a href="{% url 'messaging:start' visit.seeker.pk %}?listing={{ visit.listing.pk }}"
+         class="text-blue-600 hover:underline text-sm">
+        💬 Message
+      </a>
+    </div>
+  </div>
+</div>
