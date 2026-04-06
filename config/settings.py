@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django_htmx',
     # Local
     'accounts',
+    'listings',
     
 ]
 

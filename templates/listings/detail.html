@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}{{ listing.title }} — RoomieMatch{% endblock %}
+
+{% block content %}
+<a href="{% url 'listings:list' %}" class="text-blue-600 hover:underline mb-6 inline-block">← Back to listings</a>
+
+<div class="bg-white rounded-xl shadow overflow-hidden">
+
+  <!-- Photos gallery -->
+  {% if listing.photos.all %}
+    <div x-data="{ active: 0 }" class="relative">
+      {% for photo in listing.photos.all %}
+        <img src="{{ photo.image.url }}"
+             x-show="active === {{ forloop.counter0 }}"
+             class="w-full h-96 object-cover" />
+      {% endfor %}
+      {% if listing.photos.count > 1 %}
+        <button @click="active = (active - 1 + {{ listing.photos.count }}) % {{ listing.photos.count }}"
+                class="absolute left-4 top-1/2 bg-white rounded-full p-2 shadow">←</button>
+        <button @click="active = (active + 1) % {{ listing.photos.count }}"
+                class="absolute right-4 top-1/2 bg-white rounded-full p-2 shadow">→</button>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="w-full h-96 bg-gray-100 flex items-center justify-center text-6xl">🏠</div>
+  {% endif %}
+
+  <div class="p-8">
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        {% if score %}
+          <span class="inline-block px-3 py-1 rounded-full text-sm font-medium mb-3
+            {% if score >= 80 %}bg-green-100 text-green-700
+            {% elif score >= 60 %}bg-yellow-100 text-yellow-700
+            {% else %}bg-red-100 text-red-700{% endif %}">
+            {{ score }}% compatible with you
+          </span>
+        {% endif %}
+        <h1 class="text-3xl font-bold">{{ listing.title }}</h1>
+        <p class="text-gray-500 mt-1">📍 {{ listing.city }} — {{ listing.address }}</p>
+      </div>
+      <div class="text-right">
+        <p class="text-4xl font-bold text-blue-600">{{ listing.price }}€</p>
+        <p class="text-gray-400 text-sm">per month</p>
+      </div>
+    </div>
+
+    <!-- Details grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-gray-50 rounded-lg p-3 text-center">
+        <p class="text-2xl">📐</p>
+        <p class="font-semibold">{{ listing.size }}m²</p>
+        <p class="text-gray-500 text-xs">Size</p>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3 text-center">
+        <p class="text-2xl">🛏</p>
+        <p class="font-semibold">{{ listing.get_room_type_display }}</p>
+        <p class="text-gray-500 text-xs">Room type</p>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3 text-center">
+        <p class="text-2xl">📅</p>
+        <p class="font-semibold">{{ listing.available_from }}</p>
+        <p class="text-gray-500 text-xs">Available from</p>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3 text-center">
+        <p class="text-2xl">🏠</p>
+        <p class="font-semibold">{{ listing.owner.username }}</p>
+        <p class="text-gray-500 text-xs">Owner</p>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-6">
+      <h2 class="font-semibold text-lg mb-2">Description</h2>
+      <p class="text-gray-600 leading-relaxed">{{ listing.description }}</p>
+    </div>
+
+    <!-- House rules -->
+    <div class="mb-6">
+      <h2 class="font-semibold text-lg mb-3">House rules</h2>
+      <div class="flex gap-4 flex-wrap">
+        <span class="px-3 py-1 rounded-full text-sm {% if listing.pets_allowed %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+          {% if listing.pets_allowed %}✅{% else %}❌{% endif %} Pets
+        </span>
+        <span class="px-3 py-1 rounded-full text-sm {% if listing.smoking_allowed %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+          {% if listing.smoking_allowed %}✅{% else %}❌{% endif %} Smoking
+        </span>
+        <span class="px-3 py-1 rounded-full text-sm {% if listing.students_allowed %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+          {% if listing.students_allowed %}✅{% else %}❌{% endif %} Students
+        </span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-4">
+      {% if user.is_authenticated and user.is_seeker %}
+        <a href="{% url 'visits:request' listing.pk %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold">
+          Request a visit
+        </a>
+        <a href="{% url 'messaging:start' listing.owner.pk %}" class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 font-semibold">
+          Send a message
+        </a>
+      {% elif user == listing.owner %}
+        <a href="{% url 'listings:edit' listing.pk %}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
+          Edit listing
+        </a>
+        <form method="POST" action="{% url 'listings:delete' listing.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600"
+                  onclick="return confirm('Delete this listing?')">
+            Delete
+          </button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+          Log in to request a visit
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
