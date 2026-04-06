@@ -16,6 +16,8 @@ INSTALLED_APPS = [
     # Local
     'accounts',
     'listings',
+    'matching',
+
     
 ]
 
@@ -48,7 +50,7 @@ TEMPLATES = [
 ]
 
 LOGIN_URL           = '/accounts/login/'
-LOGIN_REDIRECT_URL  = '/dashboard/'
+LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = '/'
 
 MEDIA_URL  = '/media/'

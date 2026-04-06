@@ -5,8 +5,7 @@ from django.core.paginator import Paginator
 from .models import Listing
 from .forms import ListingForm, ListingPhotoFormSet, ListingFilterForm
 
-def calculate_score(profile, listing):
-    return None
+from matching.utils import calculate_score 
 
 def listing_list(request):
     listings = Listing.objects.filter(status='active').prefetch_related('photos')

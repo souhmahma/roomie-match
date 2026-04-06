@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}My Matches — RoomieMatch{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+  <div>
+    <h1 class="text-3xl font-bold">My best matches</h1>
+    <p class="text-gray-500 mt-1">Listings sorted by compatibility with your profile</p>
+  </div>
+  <a href="{% url 'profile' %}" class="text-blue-600 hover:underline text-sm">
+    ✏️ Update my preferences
+  </a>
+</div>
+
+<!-- Score legend -->
+<div class="flex gap-3 mb-8 flex-wrap">
+  <span class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">🟢 80%+ Great match</span>
+  <span class="px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-700">🟡 60-79% Good match</span>
+  <span class="px-3 py-1 rounded-full text-sm bg-orange-100 text-orange-700">🟠 40-59% Moderate</span>
+  <span class="px-3 py-1 rounded-full text-sm bg-red-100 text-red-700">🔴 0-39% Low match</span>
+</div>
+
+<!-- Listings grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for listing in page_obj %}
+    <div class="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden">
+
+      <!-- Photo -->
+      {% with listing.get_main_photo as photo %}
+        {% if photo %}
+          <img src="{{ photo.image.url }}" class="w-full h-48 object-cover" />
+        {% else %}
+          <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-4xl">🏠</div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="p-4">
+
+        <!-- Score badge -->
+        <div class="flex items-center gap-2 mb-3">
+          <span class="px-3 py-1 rounded-full text-sm font-semibold {{ listing.score_color }}">
+            {{ listing.score }}% — {{ listing.score_label }}
+          </span>
+        </div>
+
+        <!-- Score breakdown bar -->
+        <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+          <div class="h-2 rounded-full
+            {% if listing.score >= 80 %}bg-green-500
+            {% elif listing.score >= 60 %}bg-yellow-500
+            {% elif listing.score >= 40 %}bg-orange-500
+            {% else %}bg-red-500{% endif %}"
+            style="width: {{ listing.score }}%">
+          </div>
+        </div>
+
+        <h3 class="font-semibold text-lg">{{ listing.title }}</h3>
+        <p class="text-gray-500 text-sm mt-1">📍 {{ listing.city }}</p>
+        <p class="text-gray-400 text-sm">{{ listing.size }}m² · {{ listing.get_room_type_display }}</p>
+
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-blue-600 font-bold text-xl">
+            {{ listing.price }}€<span class="text-sm font-normal text-gray-400">/mo</span>
+          </span>
+          <a href="{% url 'listings:detail' listing.pk %}"
+             class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+            View
+          </a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-span-3 text-center py-20">
+      <p class="text-gray-500 text-xl mb-4">No listings available right now.</p>
+      <a href="{% url 'profile' %}" class="text-blue-600 hover:underline">
+        Complete your profile to get better matches
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+  <div class="flex justify-center gap-2 mt-8">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+        ← Previous
+      </a>
+    {% endif %}
+    <span class="px-4 py-2 text-gray-500">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
+        Next →
+      </a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}
