@@ -1,2 +1,2 @@
-web: gunicorn roomie-match.config.wsgi
-worker: celery -A roomie-match.config worker --loglevel=info
+web: gunicorn config.wsgi
+worker: celery -A config worker --loglevel=info
