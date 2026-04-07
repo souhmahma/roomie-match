@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}Edit Listing — RoomieMatch{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-10 px-4">
+  <div class="mb-8">
+    <a href="{% url 'listings:detail' listing.pk %}" class="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors group mb-6">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Back to listing
+    </a>
+    <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Edit Listing</h1>
+    <p class="text-gray-600 mt-2">Update the details of your property in <span class="font-semibold text-gray-900">{{ listing.city }}</span>.</p>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" class="space-y-8">
+    {% csrf_token %}
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-8 py-5 border-b border-gray-50 bg-gray-50/50">
+        <h2 class="font-bold text-gray-800 text-lg">General Information</h2>
+      </div>
+      <div class="p-8 space-y-5">
+        {% for field in form %}
+          <div class="relative">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">{{ field.label }}</label>
+            <div class="relative group">
+              {{ field }}
+              
+              <style>
+                /* Consistent Global Input Styles */
+                input:not([type="checkbox"]), select, textarea {
+                  width: 100%;
+                  padding: 0.8rem 1rem;
+                  border-radius: 0.75rem;
+                  border: 1px solid #e5e7eb;
+                  transition: all 0.2s ease-in-out;
+                  outline: none;
+                  background-color: #ffffff;
+                }
+                input:focus, select:focus, textarea:focus {
+                  border-color: #2563eb;
+                  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+                }
+                /* Specialized styling for file inputs */
+                input[type="file"]::file-selector-button {
+                  padding: 0.4rem 0.8rem;
+                  border-radius: 0.5rem;
+                  border: 1px solid #d1d5db;
+                  background: #f9fafb;
+                  font-weight: 600;
+                  cursor: pointer;
+                  margin-right: 10px;
+                }
+              </style>
+            </div>
+            {% if field.errors %}
+              <p class="text-red-500 text-xs mt-2 italic flex items-center">
+                <span class="mr-1">●</span> {{ field.errors.0 }}
+              </p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-8 py-5 border-b border-gray-50 bg-gray-50/50">
+        <h2 class="font-bold text-gray-800 text-lg">Manage Photos</h2>
+      </div>
+      
+      <div class="p-8">
+        {{ formset.management_form }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {% for photo_form in formset %}
+            <div class="p-5 border-2 {% if photo_form.instance.pk %}border-gray-100 bg-gray-50/30{% else %}border-dashed border-gray-200 bg-blue-50/10{% endif %} rounded-2xl transition-all">
+              
+              {% if photo_form.instance.pk %}
+                <div class="flex items-center gap-4 mb-4">
+                  <img src="{{ photo_form.instance.image.url }}" class="w-20 h-20 object-cover rounded-xl shadow-sm ring-2 ring-white" />
+                  <div>
+                    <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Current Photo</span>
+                    <p class="text-xs text-gray-500 truncate w-32 italic">Stored on server</p>
+                  </div>
+                </div>
+              {% else %}
+                <div class="mb-4">
+                  <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">New Slot</span>
+                </div>
+              {% endif %}
+
+              <div class="space-y-3">
+                <div class="text-sm">{{ photo_form.image }}</div>
+                <div class="text-sm">{{ photo_form.caption }}</div>
+
+                {% if photo_form.instance.pk %}
+                  <div class="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
+                    <div class="flex items-center p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer group">
+                      {{ photo_form.DELETE }}
+                      <label class="ml-2 text-red-500 text-xs font-bold uppercase cursor-pointer">
+                        Delete Photo
+                      </label>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+      <button type="submit" class="flex-[2] bg-blue-600 text-white py-4 px-8 rounded-2xl hover:bg-blue-700 font-bold text-lg transition-all transform hover:scale-[1.01] active:scale-95 shadow-xl shadow-blue-100">
+        Update Listing
+      </button>
+      <a href="{% url 'listings:detail' listing.pk %}" class="flex-1 bg-white border border-gray-200 text-gray-600 py-4 px-8 rounded-2xl font-bold text-center hover:bg-gray-50 transition-all">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

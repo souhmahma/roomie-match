@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Delete listing — RoomieMatch{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+  <div class="bg-white rounded-xl shadow p-8 text-center">
+    <p class="text-5xl mb-4">🗑️</p>
+    <h1 class="text-2xl font-bold mb-2">Delete this listing?</h1>
+    <p class="text-gray-500 mb-2">{{ listing.title }}</p>
+    <p class="text-gray-400 text-sm mb-8">This action cannot be undone.</p>
+
+    <div class="flex gap-4 justify-center">
+      <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
+          Yes, delete
+        </button>
+      </form>
+      <a href="{% url 'listings:my_listings' %}"
+         class="border border-gray-300 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-50">
+        Cancel
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
