@@ -36,7 +36,7 @@
           hx-post="{% url 'visits:update_status' visit.pk 'accept' %}"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'  hx-target="#visit-{{ visit.pk }}"
           hx-swap="outerHTML"
-          class="bg-green-500 ...">
+          class="bg-green-500 text-white px-4 py-1 rounded-lg">
           ✅ Accept
         </button>
 
@@ -44,7 +44,7 @@
           hx-post="{% url 'visits:update_status' visit.pk 'decline' %}"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'  hx-target="#visit-{{ visit.pk }}"
           hx-swap="outerHTML"
-          class="bg-red-500 ...">
+          class="bg-red-500 text-white px-4 py-1 rounded-lg">
           ❌ Decline
         </button>
         </div>

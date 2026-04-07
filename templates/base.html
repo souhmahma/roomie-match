@@ -11,31 +11,31 @@
 <body class="bg-gray-50 min-h-screen">
 
   <nav class="bg-white shadow-sm px-6 py-4 flex items-center justify-between">
-    <a href="/" class="text-xl font-bold text-blue-600">🏠 RoomieMatch</a>
+    <a href="/" class="text-xl font-bold text-yellow-600">RoomieMatch</a>
 
     <div class="flex items-center gap-4 text-sm">
 
-      <a href="{% url 'listings:list' %}" class="text-gray-600 hover:text-blue-600">
+      <a href="{% url 'listings:list' %}" class="bg-yellow-600 text-white px-4 py-1 rounded-lg">
         Listings
       </a>
 
       {% if user.is_authenticated %}
 
         {% if user.is_seeker %}
-          <a href="{% url 'matching:best_matches' %}" class="text-gray-600 hover:text-blue-600">
-            🎯 My matches
+          <a href="{% url 'matching:best_matches' %}" class="bg-yellow-600 text-white px-4 py-1 rounded-lg">
+            My matches
           </a>
         {% endif %}
 
         {% if user.is_owner %}
-          <a href="{% url 'listings:my_listings' %}" class="text-gray-600 hover:text-blue-600">
+          <a href="{% url 'listings:my_listings' %}" class="bg-yellow-600 text-white px-4 py-1 rounded-lg">
             My listings
           </a>
         {% endif %}
 
         <!-- Messages with unread badge -->
-        <a href="{% url 'messaging:inbox' %}" class="relative text-gray-600 hover:text-blue-600 flex items-center gap-1">
-          💬 Messages
+        <a href="{% url 'messaging:inbox' %}" class="relative bg-yellow-600 text-white px-4 py-1 rounded-lg flex items-center gap-1">
+           Messages
           <span id="unread-count"
                 hx-get="{% url 'messaging:unread_count' %}"
                 hx-trigger="load, every 30s"
@@ -44,11 +44,17 @@
           </span>
         </a>
 
-        <a href="{% url 'dashboard' %}" class="text-gray-600 hover:text-blue-600">
+        <a href="{% url 'dashboard' %}" class="bg-yellow-600 text-white px-4 py-1 rounded-lg">
           Dashboard
         </a>
 
-        <!-- Avatar + username -->
+        
+        
+
+        <a href="{% url 'logout' %}" class="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600">
+          Logout
+        </a>
+
         <a href="{% url 'profile' %}" class="flex items-center gap-2 hover:opacity-80">
           {% if user.avatar %}
             <img src="{{ user.avatar.url }}" class="w-8 h-8 rounded-full object-cover" />
@@ -59,12 +65,8 @@
           {% endif %}
         </a>
 
-        <a href="{% url 'logout' %}" class="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600">
-          Logout
-        </a>
-
       {% else %}
-        <a href="{% url 'login' %}"    class="text-gray-600 hover:text-blue-600">Login</a>
+        <a href="{% url 'login' %}"    class="bg-yellow-600 text-white px-4 py-1 rounded-lg hover:text-blue-600">Login</a>
         <a href="{% url 'register' %}" class="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700">
           Sign Up
         </a>

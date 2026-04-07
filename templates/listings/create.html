@@ -2,48 +2,115 @@
 {% block title %}Post a listing — RoomieMatch{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto">
-  <h1 class="text-3xl font-bold mb-8">Post a listing</h1>
+<div class="max-w-3xl mx-auto py-10 px-4">
+  <div class="mb-8">
+    <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Post a Listing</h1>
+    <p class="text-gray-600 mt-2">Fill out the details below to find your perfect roommate.</p>
+  </div>
 
-  <form method="POST" enctype="multipart/form-data" class="space-y-6">
+  <form method="POST" enctype="multipart/form-data" class="space-y-8">
     {% csrf_token %}
 
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="font-semibold text-lg mb-4">General information</h2>
-      <div class="space-y-4">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-8 py-5 border-b border-gray-50 bg-gray-50/50">
+        <h2 class="font-bold text-gray-800 text-lg">General Information</h2>
+      </div>
+      <div class="p-8 space-y-5">
         {% for field in form %}
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
-            {{ field }}
+            <label class="block text-sm font-semibold text-gray-700 mb-2">{{ field.label }}</label>
+            <div class="relative group">
+              {{ field }}
+              
+              <style>
+                /* Consistent styling for inputs, selects, and textareas */
+                input:not([type="checkbox"]), select, textarea {
+                  width: 100%;
+                  padding: 0.75rem 1rem;
+                  border-radius: 0.75rem;
+                  border: 1px solid #e5e7eb;
+                  transition: all 0.2s ease-in-out;
+                  outline: none;
+                }
+                input:focus, select:focus, textarea:focus {
+                  border-color: #2563eb;
+                  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+                }
+                /* Styling for file inputs */
+                input[type="file"] {
+                  padding: 0.5rem;
+                  font-size: 0.875rem;
+                  color: #6b7280;
+                }
+                input[type="file"]::file-selector-button {
+                  margin-right: 1rem;
+                  padding: 0.5rem 1rem;
+                  border-radius: 0.5rem;
+                  border: none;
+                  background: #eff6ff;
+                  color: #2563eb;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: all 0.2s;
+                }
+                input[type="file"]::file-selector-button:hover {
+                  background: #dbeafe;
+                }
+              </style>
+            </div>
             {% if field.errors %}
-              <p class="text-red-500 text-sm">{{ field.errors.0 }}</p>
+              <p class="text-red-500 text-xs mt-2 italic flex items-center">
+                <span class="mr-1">●</span> {{ field.errors.0 }}
+              </p>
             {% endif %}
           </div>
         {% endfor %}
       </div>
     </div>
 
-    <!-- Photos -->
-    <div class="bg-white rounded-xl shadow p-6">
-      <h2 class="font-semibold text-lg mb-4">Photos (up to 10)</h2>
-      {{ formset.management_form }}
-      <div class="space-y-4">
-        {% for photo_form in formset %}
-          <div class="border rounded-lg p-4">
-            {{ photo_form.image }}
-            {{ photo_form.caption }}
-            {% if photo_form.instance.pk %}
-              {{ photo_form.DELETE }}
-              <label class="text-red-500 text-sm">Delete this photo</label>
-            {% endif %}
-          </div>
-        {% endfor %}
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-8 py-5 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+        <h2 class="font-bold text-gray-800 text-lg">Photos</h2>
+        <span class="text-xs font-medium text-gray-500 bg-gray-200 px-2 py-1 rounded-md uppercase">Up to 3 photos</span>
+      </div>
+      
+      <div class="p-8">
+        {{ formset.management_form }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {% for photo_form in formset %}
+            <div class="relative p-5 border-2 border-dashed border-gray-200 rounded-2xl hover:border-blue-300 transition-colors bg-gray-50/30">
+              <div class="space-y-3">
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Photo #{{ forloop.counter }}</label>
+                
+                <div class="flex flex-col gap-3">
+                  {{ photo_form.image }}
+                  {{ photo_form.caption }}
+                </div>
+
+                {% if photo_form.instance.pk %}
+                  <div class="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
+                    {{ photo_form.DELETE }}
+                    <label class="text-red-500 text-xs font-bold uppercase cursor-pointer hover:text-red-700">
+                      Remove this photo
+                    </label>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
 
-    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold">
-      Post listing
-    </button>
+    <div class="pt-4">
+      <button type="submit" class="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl hover:bg-blue-700 font-bold text-lg transition-all transform hover:scale-[1.01] active:scale-95 shadow-xl shadow-blue-100 flex justify-center items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+        </svg>
+        Publish My Listing
+      </button>
+      <p class="text-center text-gray-400 text-xs mt-4">By publishing, you agree to our community guidelines.</p>
+    </div>
   </form>
 </div>
 {% endblock %}
