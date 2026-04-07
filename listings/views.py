@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Listing
 from .forms import ListingForm, ListingPhotoFormSet, ListingFilterForm
-
+from visits.tasks import send_listing_created_email
 from matching.utils import calculate_score 
 
 def listing_list(request):
