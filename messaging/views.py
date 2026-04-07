@@ -81,6 +81,7 @@ def start_conversation(request, user_pk):
         try:
             conversation.listing = Listing.objects.get(pk=listing_pk)
             conversation.save()
+            send_new_message_email.delay(message.id)
         except Listing.DoesNotExist:
             pass
 
