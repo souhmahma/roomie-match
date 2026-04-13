@@ -1,4 +1,4 @@
-# 🏠 RoomieMatch : Flatmate Matching Platform
+# RoomieMatch : Flatmate Matching Platform
 
 A fullstack flatmate matching platform connecting room seekers with owners, featuring a lifestyle-based compatibility algorithm.
 
