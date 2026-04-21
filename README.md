@@ -188,8 +188,29 @@ Owner : user: vendor2 mdp: Vendor1234
 
 ## ⚙️ Installation
 
+Create .env inside backend:
+
+```bash
+SECRET_KEY=
+DEBUG=True
+DATABASE_URL=sqlite:///db.sqlite3
+ALLOWED_HOSTS=127.0.0.1,localhost
+# Redis
+REDIS_URL=
+# Email (Gmail)
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
+DEFAULT_FROM_EMAIL=
+```
+After:
+
 ```bash
 # Backend
+cd backend
 python -m venv envroom
 .\envroom\Scripts\Activate
 pip install -r requirements.txt
