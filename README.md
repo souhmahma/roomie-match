@@ -206,7 +206,12 @@ EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 DEFAULT_FROM_EMAIL=
 ```
-After:
+After You can use docker compose it starts everything automatically:
+```bash
+docker compose up -d
+```
+
+OR if you don't prefer docker:
 
 ```bash
 # Backend
