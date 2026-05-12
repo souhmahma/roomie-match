@@ -2,7 +2,9 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile  
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
     ports:
       - "8000:8000"
     environment:
@@ -22,8 +24,11 @@ services:
   worker:
     build:
       context: .
-      dockerfile: Dockerfile  
+      dockerfile: Dockerfile
     command: celery -A config worker --loglevel=info
+    # Le worker a aussi besoin des accès (DB, Redis, Secrets)
+    env_file:
+      - ./backend/.env
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
