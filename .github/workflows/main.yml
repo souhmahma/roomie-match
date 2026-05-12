@@ -1,0 +1,36 @@
+name: Django HTMX CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker compose build
+
+      - name: Start Container
+        run: docker compose up -d
+
+      - name: Smoke Test
+        run: |
+          sleep 10
+          curl -I http://localhost:8000/ || (docker compose logs web && exit 1)
+          echo "Django is up and running!"
+
+      - name: Stop Container
+        run: docker compose down
+
+  deploy-ready:
+    needs: build-and-check
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify
+        run: echo "Build successful. Ready to deploy Django + HTMX app."
