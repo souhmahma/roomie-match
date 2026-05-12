@@ -1,6 +1,8 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -16,12 +18,16 @@ services:
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
-    worker:
-      build: .
-      command: celery -A config worker --loglevel=info
-      environment:
-        - REDIS_URL=${REDIS_URL}
-        - DATABASE_URL=${DATABASE_URL}
-        - CELERY_TASK_ALWAYS_EAGER=${CELERY_TASK_ALWAYS_EAGER}
-      depends_on:
-        - backend
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: celery -A config worker --loglevel=info
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
+      - CELERY_TASK_ALWAYS_EAGER=${CELERY_TASK_ALWAYS_EAGER}
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      - web
