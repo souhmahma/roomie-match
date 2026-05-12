@@ -1,5 +1,7 @@
 # RoomieMatch : Flatmate Matching Platform
 
+[![Django HTMX CI](https://github.com/souhmahma/roomie-match/actions/workflows/main.yml/badge.svg)](https://github.com/souhmahma/roomie-match/actions/workflows/main.yml)
+
 A fullstack flatmate matching platform connecting room seekers with owners, featuring a lifestyle-based compatibility algorithm.
 
 > **Stack** : Django · HTMX · Tailwind CSS · Alpine.js · Redis · Celery
