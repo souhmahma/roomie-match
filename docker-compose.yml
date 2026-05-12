@@ -4,14 +4,17 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DEBUG=True
-      - SECRET_KEY=dev_key_123
-      - DATABASE_URL=sqlite:///./db.sqlite3
-      - REDIS_URL=redis://redis:6379/0
-    depends_on:
-      - redis
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      
+      - REDIS_URL=${REDIS_URL}
+      - CELERY_TASK_ALWAYS_EAGER=${CELERY_TASK_ALWAYS_EAGER}
+      
+      - EMAIL_BACKEND=${EMAIL_BACKEND}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
 
-  redis:
-    image: "redis:alpine"
-    expose:
-      - "6379"
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
