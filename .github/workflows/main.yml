@@ -11,7 +11,7 @@ env:
   DEBUG: "True"
   DATABASE_URL: "sqlite:///./db.sqlite3"
   ALLOWED_HOSTS: "127.0.0.1,localhost"
-  REDIS_URL: "redis://localhost:6379/0"
+  REDIS_URL: "redis://redis:6379/0"
   CELERY_TASK_ALWAYS_EAGER: "True"
   EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
   EMAIL_HOST: "localhost"
@@ -24,6 +24,13 @@ env:
 jobs:
   build-and-check:
     runs-on: ubuntu-latest
+    
+    services:
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+
     steps:
       - uses: actions/checkout@v4
 
@@ -35,7 +42,7 @@ jobs:
       - name: Build Docker Image
         run: docker compose build
 
-      - name: Start Container
+      - name: Start Containers
         run: docker compose up -d
 
       - name: Smoke Test
@@ -45,7 +52,7 @@ jobs:
           docker compose exec -T worker celery -A config inspect ping || (docker compose logs worker && exit 1)
           echo "Django and Worker are up and running!"
 
-      - name: Stop Container
+      - name: Stop Containers
         run: docker compose down
 
   deploy-ready:
