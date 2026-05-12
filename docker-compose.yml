@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file:
-      - ./backend/.env
     ports:
       - "8000:8000"
     environment:
@@ -26,8 +24,6 @@ services:
       context: .
       dockerfile: Dockerfile
     command: celery -A config worker --loglevel=info
-    env_file:
-      - ./backend/.env
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=${DATABASE_URL}
