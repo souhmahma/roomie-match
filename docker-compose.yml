@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=dev_key_123
+      - DATABASE_URL=sqlite:///./db.sqlite3
