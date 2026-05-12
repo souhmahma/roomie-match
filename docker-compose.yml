@@ -22,7 +22,7 @@ services:
   worker:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: Dockerfile
     command: celery -A config worker --loglevel=info
     environment:
       - REDIS_URL=${REDIS_URL}
