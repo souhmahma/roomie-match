@@ -6,18 +6,21 @@ on:
   pull_request:
     branches: [main]
 env:
-  SECRET_KEY: "ci-mock-key"
+  SECRET_KEY: "ci-insecure-mock-key-for-testing-only"
+  DEBUG: "True"
   DATABASE_URL: "sqlite:///./db.sqlite3"
+  ALLOWED_HOSTS: "127.0.0.1,localhost"
+
   REDIS_URL: "redis://localhost:6379/0"
   CELERY_TASK_ALWAYS_EAGER: "True"
-  EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
-  EMAIL_HOST: "localhost"
-  EMAIL_PORT: "25"
-  EMAIL_HOST_USER: "mock"
-  EMAIL_HOST_PASSWORD: "mock"
-  DEFAULT_FROM_EMAIL: "noreply@test.com"
 
-  STRIPE_SECRET_KEY: "sk_test_mock"
+  EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
+  EMAIL_HOST: "smtp.gmail.com"
+  EMAIL_PORT: "587"
+  EMAIL_USE_TLS: "True"
+  EMAIL_HOST_USER: "mock-user@gmail.com"
+  EMAIL_HOST_PASSWORD: "mock-password-123"
+  DEFAULT_FROM_EMAIL: "webmaster@localhost"
   
 jobs:
   build-and-check:
