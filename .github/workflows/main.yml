@@ -5,28 +5,32 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main]
+
 env:
   SECRET_KEY: "ci-insecure-mock-key-for-testing-only"
   DEBUG: "True"
   DATABASE_URL: "sqlite:///./db.sqlite3"
   ALLOWED_HOSTS: "127.0.0.1,localhost"
-
   REDIS_URL: "redis://localhost:6379/0"
   CELERY_TASK_ALWAYS_EAGER: "True"
-
   EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
-  EMAIL_HOST: "smtp.gmail.com"
-  EMAIL_PORT: "587"
-  EMAIL_USE_TLS: "True"
-  EMAIL_HOST_USER: "mock-user@gmail.com"
-  EMAIL_HOST_PASSWORD: "mock-password-123"
+  EMAIL_HOST: "localhost"
+  EMAIL_PORT: "1025"
+  EMAIL_USE_TLS: "False"
+  EMAIL_HOST_USER: "mock-user"
+  EMAIL_HOST_PASSWORD: "mock-password"
   DEFAULT_FROM_EMAIL: "webmaster@localhost"
-  
+
 jobs:
   build-and-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Create dummy env file
+        run: |
+          mkdir -p backend
+          touch backend/.env
 
       - name: Build Docker Image
         run: docker compose build
@@ -36,9 +40,10 @@ jobs:
 
       - name: Smoke Test
         run: |
-          sleep 10
-          curl -I http://localhost:8000/ || (docker compose logs web && exit 1)
-          echo "Django is up and running!"
+          sleep 15
+          curl -f http://localhost:8000/ || (docker compose logs web && exit 1)
+          docker compose exec -T worker celery -A config inspect ping || (docker compose logs worker && exit 1)
+          echo "Django and Worker are up and running!"
 
       - name: Stop Container
         run: docker compose down
