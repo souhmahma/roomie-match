@@ -20,8 +20,6 @@ services:
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
-    depends_on:
-      - redis
 
   worker:
     build:
@@ -31,23 +29,9 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
       - CELERY_TASK_ALWAYS_EAGER=${CELERY_TASK_ALWAYS_EAGER}
-      - EMAIL_BACKEND=${EMAIL_BACKEND}
-      - EMAIL_HOST=${EMAIL_HOST}
-      - EMAIL_PORT=${EMAIL_PORT}
-      - EMAIL_USE_TLS=${EMAIL_USE_TLS}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       - web
-      - redis
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
